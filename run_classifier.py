@@ -17,6 +17,7 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+import random
 
 import collections
 import csv
@@ -202,6 +203,51 @@ class DataProcessor(object):
       for line in reader:
         lines.append(line)
       return lines
+
+
+class SnipscoProcessor(DataProcessor):
+
+  def __init__(self):
+    self._test_fold = random.randint(0, 4)
+
+  def get_train_examples(self, data_dir):
+    lines = []
+    for i in range(5):
+      if i != self._test_fold:
+        filepath = os.path.join(data_dir, f"snipsco_full.{i}.csv")
+        lines.extend(self._read_tsv(filepath))
+
+    examples = []
+    for (i, line) in enumerate(lines):
+      guid = "train-%d" % (i)
+      text_a = tokenization.convert_to_unicode(line[0])
+      label = tokenization.convert_to_unicode(line[1])
+      examples.append(
+          InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
+
+    return examples
+
+  def get_dev_examples(self, data_dir):
+    pass
+
+  def get_test_examples(self, data_dir):
+    lines = []
+    filepath = os.path.join(data_dir, f"snipsco_full.{self._test_fold}.csv")
+    lines.extend(self._read_tsv(filepath))
+
+    examples = []
+    for (i, line) in enumerate(lines):
+      guid = "train-%d" % (i)
+      text_a = tokenization.convert_to_unicode(line[0])
+      label = tokenization.convert_to_unicode(line[1])
+      examples.append(
+          InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
+
+    return examples
+
+  def get_labels(self):
+    return ["AddToPlaylist", "BookRestaurant", "GetWeather", "PlayMusic",
+            "RateBook", "SearchCreativeWork", "SearchScreeningEvent"]
 
 
 class XnliProcessor(DataProcessor):
@@ -788,6 +834,7 @@ def main(_):
       "mnli": MnliProcessor,
       "mrpc": MrpcProcessor,
       "xnli": XnliProcessor,
+      "snipsco": SnipscoProcessor,
   }
 
   tokenization.validate_case_matches_checkpoint(FLAGS.do_lower_case,
