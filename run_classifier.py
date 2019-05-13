@@ -124,6 +124,9 @@ flags.DEFINE_integer(
     "num_tpu_cores", 8,
     "Only used if `use_tpu` is True. Total number of TPU cores to use.")
 
+flags.DEFINE_integer(
+    "num_train_samples_per_class", 10, "Max number of train samples per class."
+)
 
 class InputExample(object):
   """A single training/test example for simple sequence classification."""
@@ -218,12 +221,17 @@ class SnipscoProcessor(DataProcessor):
         lines.extend(self._read_tsv(filepath))
 
     examples = []
+
+    samples_per_label = {}
     for (i, line) in enumerate(lines):
       guid = "train-%d" % (i)
       text_a = tokenization.convert_to_unicode(line[0])
       label = tokenization.convert_to_unicode(line[1])
-      examples.append(
-          InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
+      samples_per_label.setdefault(label, []).append(
+        InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
+
+    for label, example_list in samples_per_label:
+      examples.extend(example_list[:FLAGS.num_train_samples_per_class])
 
     return examples
 
