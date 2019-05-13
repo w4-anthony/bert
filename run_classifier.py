@@ -239,6 +239,7 @@ class SnipscoProcessor(DataProcessor):
     return self.get_test_examples(data_dir)
 
   def get_test_examples(self, data_dir):
+    print('get_test_examples')
     lines = []
     filepath = os.path.join(data_dir, f"snipsco_full.{self._test_fold}.csv")
     lines.extend(self._read_tsv(filepath))
