@@ -236,7 +236,7 @@ class SnipscoProcessor(DataProcessor):
     return examples
 
   def get_dev_examples(self, data_dir):
-    pass
+    return self.get_test_examples(data_dir)
 
   def get_test_examples(self, data_dir):
     lines = []
