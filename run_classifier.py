@@ -124,9 +124,9 @@ flags.DEFINE_integer(
     "num_tpu_cores", 8,
     "Only used if `use_tpu` is True. Total number of TPU cores to use.")
 
-flags.DEFINE_integer(
-    "num_train_samples_per_class", 10, "Max number of train samples per class."
-)
+# flags.DEFINE_integer(
+    # "num_train_samples_per_class", 10, "Max number of train samples per class."
+# )
 
 class InputExample(object):
   """A single training/test example for simple sequence classification."""
