@@ -232,9 +232,9 @@ class SnipscoProcessor(DataProcessor):
       samples_per_label.setdefault(label, []).append(
         InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
 
-    for label, example_list in samples_per_label.items():
-      print(label)
-      examples.extend(example_list[:self._num_train_samples_per_class])
+    # for label, example_list in samples_per_label.items():
+    #   print(label)
+    #   examples.extend(example_list[:self._num_train_samples_per_class])
 
     return examples
 
