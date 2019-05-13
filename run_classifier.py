@@ -245,7 +245,7 @@ class SnipscoProcessor(DataProcessor):
 
     examples = []
     for (i, line) in enumerate(lines):
-      guid = "train-%d" % (i)
+      guid = "test-%d" % (i)
       text_a = tokenization.convert_to_unicode(line[0])
       label = tokenization.convert_to_unicode(line[1])
       examples.append(
