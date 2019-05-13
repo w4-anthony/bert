@@ -210,8 +210,9 @@ class DataProcessor(object):
 
 class SnipscoProcessor(DataProcessor):
 
-  def __init__(self):
+  def __init__(self, num_train_samples_per_class):
     self._test_fold = random.randint(0, 4)
+    self._num_train_samples_per_class = num_train_samples_per_class
 
   def get_train_examples(self, data_dir):
     lines = []
@@ -231,7 +232,7 @@ class SnipscoProcessor(DataProcessor):
         InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
 
     for label, example_list in samples_per_label.items():
-      examples.extend(example_list[:FLAGS.num_train_samples_per_class])
+      examples.extend(example_list[:self._num_train_samples_per_class])
 
     return examples
 
