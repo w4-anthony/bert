@@ -217,6 +217,7 @@ class DataProcessor(object):
       split=1.0, num_train_samples_per_class=0):
     self._num_train_samples_per_class = num_train_samples_per_class
     self._train_examples = self._get_examples(train_data_files, 'train')
+    random.shuffle(self._train_examples)
     split_idx = int(len(self._train_examples) * split)
     self._dev_examples = self._train_examples[split_idx:]
     self._train_examples = self._train_examples[:split_idx]
@@ -252,7 +253,7 @@ class DataProcessor(object):
 
       examples = []
       for label, samples_list in samples_per_intent.items():
-        examples.append(samples_list[:self._num_train_samples_per_class])
+        examples.extend(samples_list[:self._num_train_samples_per_class])
 
       return examples
     return self._train_examples
