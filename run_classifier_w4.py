@@ -27,7 +27,6 @@ import optimization
 import tokenization
 import w4_pb2
 import tensorflow as tf
-import tensorflow_hub as hub
 from google.protobuf import text_format
 
 flags = tf.flags
@@ -134,6 +133,8 @@ flags.DEFINE_float(
 flags.DEFINE_boolean(
     "use_tf_hub", True, "Use model from tf hub."
 )
+
+hub = None
 
 def create_tokenizer_from_hub_module(bert_hub_module_handle):
   """Get the vocab file and casing info from the Hub module."""
@@ -861,6 +862,8 @@ def main(_):
     num_warmup_steps = int(num_train_steps * FLAGS.warmup_proportion)
 
   if FLAGS.use_tf_hub:
+    import tensorflow_hub as _hub
+    hub = _hub
     BERT_MODEL = 'cased_L-12_H-768_A-12' #@param {type:"string"}
     BERT_MODEL_HUB = 'https://tfhub.dev/google/bert_' + BERT_MODEL + '/1'
     model_fn = model_fn_builder_tfhub(
