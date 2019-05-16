@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+message SampleAnnotation {
+  string non_terminal = 1;  // annotator variable to match against this
+  int32 nth = 2 [deprecated=true];
+  string modifier = 3;
+  // Beginning and ending positions of this annotation in a sentence. The base
+  // unit is unicode codepoints. Be careful when the sentence is encoded in
+  // UTF-8. You first need to decode the sentence to unicode.
+  int32 begin_pos = 4;
+  int32 end_pos = 5;
+}
+
+message TrainingSample {
+  string sentence = 1;  // input sentence
+  repeated SampleAnnotation annotations = 2;
+}
+
+message TrainingSamples {
+  string intent = 1;  // intent name
+  repeated TrainingSample samples = 2;
+}
+
+message TrainingFiles {
+  // Filenames are relative to the directory where
+  // this file is located. That is, if this file is located in
+  // /dir/path/ and a filename is "find_restaurant.txt", then the file can be
+  // found with the path, "/dir/path/find_restaurant.txt".
+  string config_filename = 1;
+  repeated string training_samples_filenames = 2;
+}
