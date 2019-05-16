@@ -250,12 +250,14 @@ class DataProcessor(object):
     samples_list, _ = read_training_data(data_files)
 
     examples = []
-    for i, samples_per_intent in enumerate(samples_list):
+    i = 0
+    for samples_per_intent in samples_list:
       label = samples_per_intent.intent
-      guid = f"{type}-{i}"
       for sample in samples_per_intent.samples:
+        guid = f"{type}-{i}"
         examples.append(InputExample(
           guid=guid, text_a=sample.sentence, text_b=None, label=label))
+        i += 1
 
     return examples
 
@@ -277,7 +279,7 @@ class DataProcessor(object):
     """Gets a collection of `InputExample`s for the dev set."""
     return self._dev_examples
 
-  def get_test_examples(self, data_dir):
+  def get_test_examples(self):
     """Gets a collection of `InputExample`s for prediction."""
     return self._test_examples
 
