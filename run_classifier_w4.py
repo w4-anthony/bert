@@ -27,6 +27,7 @@ import optimization
 import tokenization
 import w4_pb2
 import tensorflow as tf
+import tensorflow_hub as hub
 from google.protobuf import text_format
 
 flags = tf.flags
@@ -130,6 +131,18 @@ flags.DEFINE_integer(
 flags.DEFINE_float(
     "split", 1, "Split train/validation."
 )
+
+
+def create_tokenizer_from_hub_module(bert_hub_module_handle):
+  """Get the vocab file and casing info from the Hub module."""
+  with tf.Graph().as_default():
+    bert_module = hub.Module(bert_hub_module_handle)
+    tokenization_info = bert_module(signature="tokenization_info", as_dict=True)
+    with tf.Session() as sess:
+      vocab_file, do_lower_case = sess.run([tokenization_info["vocab_file"],
+                                            tokenization_info["do_lower_case"]])
+  return tokenization.FullTokenizer(
+      vocab_file=vocab_file, do_lower_case=do_lower_case)
 
 
 class InputExample(object):
