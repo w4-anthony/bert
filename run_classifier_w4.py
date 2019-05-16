@@ -285,7 +285,9 @@ class DataProcessor(object):
 
   def get_labels(self):
     """Gets the list of labels for this data set."""
-    return self._labels
+    return ["AddToPlaylist", "BookRestaurant", "GetWeather", "PlayMusic",
+             "RateBook", "SearchCreativeWork", "SearchScreeningEvent"]
+    # return self._labels
 
 
 def convert_single_example(ex_index, example, label_list, max_seq_length,
