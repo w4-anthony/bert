@@ -244,7 +244,7 @@ class DataProcessor(object):
     labels = set()
     for example in self._train_examples:
       labels.add(example.label)
-    self._labels = list(labels)
+    self._labels = sorted(list(labels))
 
   def _get_examples(self, data_files, type):
     """Gets a collection of `InputExample`s for the train set."""
@@ -286,9 +286,7 @@ class DataProcessor(object):
 
   def get_labels(self):
     """Gets the list of labels for this data set."""
-    return ["AddToPlaylist", "BookRestaurant", "GetWeather", "PlayMusic",
-             "RateBook", "SearchCreativeWork", "SearchScreeningEvent"]
-    # return self._labels
+    return self._labels
 
 
 def convert_single_example(ex_index, example, label_list, max_seq_length,
