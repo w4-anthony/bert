@@ -23,8 +23,10 @@ import collections
 import csv
 import os
 import modeling
+import numpy as np
 import optimization
 import tokenization
+import tensorflow as tf
 import w4_pb2
 import tensorflow as tf
 from google.protobuf import text_format
@@ -831,8 +833,8 @@ def main(_):
 
   label_list = processor.get_labels()
 
-  tokenizer = tokenization.FullTokenizer(
-      vocab_file=FLAGS.vocab_file, do_lower_case=FLAGS.do_lower_case)
+  tokenizer = tokenization.CharacterTokenizer(
+    vocab_file=FLAGS.vocab_file, do_lower_case=FLAGS.do_lower_case)
 
   tpu_cluster_resolver = None
   if FLAGS.use_tpu and FLAGS.tpu_name:
@@ -984,6 +986,12 @@ def main(_):
 
     result = estimator.predict(input_fn=predict_input_fn)
 
+    label_map = {}
+    for (i, label) in enumerate(label_list):
+        label_map[label] = i
+
+    correct = 0
+    total = 0
     output_predict_file = os.path.join(FLAGS.output_dir, "test_results.tsv")
     with tf.gfile.GFile(output_predict_file, "w") as writer:
       num_written_lines = 0
@@ -992,12 +1000,24 @@ def main(_):
         probabilities = prediction["probabilities"]
         if i >= num_actual_predict_examples:
           break
+
+        pred_idx = np.argmax(probabilities)
+        label_idx = label_map[predict_examples[i].label]
+        if pred_idx == label_idx:
+            correct += 1
+        total += 1
+        print(f'{predict_examples[i].text_a}\n'
+              f'label: {predict_examples[i].label}\n'
+              f'prediction: {label_list[pred_idx]}\n')
+
         output_line = "\t".join(
             str(class_probability)
             for class_probability in probabilities) + "\n"
         writer.write(output_line)
         num_written_lines += 1
     assert num_written_lines == num_actual_predict_examples
+
+    print(f'*** eval accuracy: {(100 * correct / total):.2f}% ***')
 
 
 if __name__ == "__main__":
