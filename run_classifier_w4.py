@@ -138,7 +138,6 @@ flags.DEFINE_boolean(
 flags.DEFINE_boolean(
     "use_character_tokenizer", True,
     "Use CharacterTokenizer instead of FullTokenizer.")
-)
 
 hub = None
 
