@@ -135,6 +135,10 @@ flags.DEFINE_float(
 flags.DEFINE_boolean(
     "use_tf_hub", True, "Use model from tf hub."
 )
+flags.DEFINE_boolean(
+    "use_character_tokenizer", True,
+    "Use CharacterTokenizer instead of FullTokenizer.")
+)
 
 hub = None
 
@@ -833,8 +837,12 @@ def main(_):
 
   label_list = processor.get_labels()
 
-  tokenizer = tokenization.CharacterTokenizer(
-    vocab_file=FLAGS.vocab_file, do_lower_case=FLAGS.do_lower_case)
+  if FLAGS.use_character_tokenizer:
+    tokenizer = tokenization.CharacterTokenizer(
+      vocab_file=FLAGS.vocab_file, do_lower_case=FLAGS.do_lower_case)
+  else:
+    tokenizer = tokenization.FullTokenizer(
+      vocab_file=FLAGS.vocab_file, do_lower_case=FLAGS.do_lower_case)
 
   tpu_cluster_resolver = None
   if FLAGS.use_tpu and FLAGS.tpu_name:
