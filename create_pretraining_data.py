@@ -409,7 +409,7 @@ def truncate_seq_pair(tokens_a, tokens_b, max_num_tokens, rng):
 def main(_):
   tf.logging.set_verbosity(tf.logging.INFO)
 
-  tokenizer = tokenization.CharacterTokenizer(
+  tokenizer = tokenization.FullTokenizer(
       vocab_file=FLAGS.vocab_file, do_lower_case=FLAGS.do_lower_case)
 
   input_files = []
