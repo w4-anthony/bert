@@ -247,7 +247,9 @@ class DataProcessor(object):
       self._test_examples = self._get_examples(test_data_files, 'test')
 
     labels = set()
-    for example in self._train_examples:
+    all_examples = (self._train_examples + self._dev_examples +
+                    self._test_examples)
+    for example in all_examples:
       labels.add(example.label)
     self._labels = sorted(list(labels))
 
